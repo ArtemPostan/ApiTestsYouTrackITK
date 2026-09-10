@@ -6,6 +6,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 public class CustomFieldApi {
+    private static final String CUSTOM_FIELD_FIELDS = "id,name,fieldType(presentation,id),isAutoAttached,isDisplayedInIssueList";
+    private static final String API_PATH_POST = "/api/admin/customFieldSettings/customFields";
+    private static final String API_PATH_DELETE = "/api/admin/customFieldSettings/customFields/{id}";
 
     public static Response createCustomField(CreateCustomFieldRequest request) {
 
@@ -13,9 +16,8 @@ public class CustomFieldApi {
                 .given()
                 .spec(ApiBaseConfiguration.getAuthSpec())
                 .body(request)
-                .queryParam("fields",
-                        "id,name,fieldType(presentation,id),isAutoAttached,isDisplayedInIssueList")
-                .post("/api/admin/customFieldSettings/customFields");
+                .queryParam("fields",CUSTOM_FIELD_FIELDS)
+                .post(API_PATH_POST);
     }
 
     public static Response deleteCustomField(String id) {
@@ -23,6 +25,6 @@ public class CustomFieldApi {
         return RestAssured
                 .given()
                 .spec(ApiBaseConfiguration.getAuthSpec())
-                .delete("/api/admin/customFieldSettings/customFields/{id}", id);
+                .delete(API_PATH_DELETE, id);
     }
 }
