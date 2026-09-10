@@ -1,7 +1,9 @@
 package apiTests.positive;
 
 import based.ApiBaseConfiguration;
+import dto.CreateCustomFieldRequest;
 import dto.CustomFieldResponse;
+import dto.FieldType;
 import functionsApi.CustomFieldApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -21,8 +23,16 @@ public class CreateCustomFieldTest extends ApiBaseConfiguration {
 
         String fieldName = "ZoneOfResponsibility_" + UUID.randomUUID();
 
+        CreateCustomFieldRequest request =
+                new CreateCustomFieldRequest(
+                        new FieldType("enum[1]"),
+                        fieldName,
+                        true,
+                        false
+                );
         Response response =
-                CustomFieldApi.createCustomField(fieldName);
+                CustomFieldApi.createCustomField(request);
+
 
         CustomFieldResponse customField =
                 response
