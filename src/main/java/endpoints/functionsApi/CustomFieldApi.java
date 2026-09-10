@@ -1,9 +1,9 @@
-package functionsApi;
+package endpoints.functionsApi;
 
-import based.ApiBaseConfiguration;
 import dto.CreateCustomFieldRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import specifications.ApiSpecifications;
 
 public class CustomFieldApi {
     private static final String CUSTOM_FIELD_FIELDS = "id,name,fieldType(presentation,id),isAutoAttached,isDisplayedInIssueList";
@@ -14,7 +14,7 @@ public class CustomFieldApi {
 
         return RestAssured
                 .given()
-                .spec(ApiBaseConfiguration.getAuthSpec())
+                .spec(ApiSpecifications.getAuthSpec())
                 .body(request)
                 .queryParam("fields",CUSTOM_FIELD_FIELDS)
                 .post(API_PATH_POST);
@@ -24,7 +24,7 @@ public class CustomFieldApi {
 
         return RestAssured
                 .given()
-                .spec(ApiBaseConfiguration.getAuthSpec())
+                .spec(ApiSpecifications.getAuthSpec())
                 .delete(API_PATH_DELETE, id);
     }
 }

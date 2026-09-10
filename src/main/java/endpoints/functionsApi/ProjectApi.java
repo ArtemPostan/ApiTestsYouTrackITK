@@ -1,9 +1,9 @@
-package functionsApi;
+package endpoints.functionsApi;
 
-import based.ApiBaseConfiguration;
 import dto.CreateProjectRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import specifications.ApiSpecifications;
 
 public class ProjectApi {
     private static final String PROJECT_FIELDS = "id,name,shortName,leader(id,name,login)";
@@ -14,7 +14,7 @@ public class ProjectApi {
 
       return RestAssured
                 .given()
-                .spec(ApiBaseConfiguration.getAuthSpec())
+                .spec(ApiSpecifications.getAuthSpec())
                 .body(request)
                 .queryParam("fields", PROJECT_FIELDS)
                 .post(API_PATH_POST);
@@ -24,7 +24,7 @@ public class ProjectApi {
 
         return RestAssured
                 .given()
-                .spec(ApiBaseConfiguration.getAuthSpec())
+                .spec(ApiSpecifications.getAuthSpec())
                 .delete(API_PATH_DELETE, id);
     }
 }

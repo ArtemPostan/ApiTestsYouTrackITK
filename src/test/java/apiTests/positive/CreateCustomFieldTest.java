@@ -1,10 +1,10 @@
 package apiTests.positive;
 
-import based.ApiBaseConfiguration;
+import based.ApiBase;
 import dto.CreateCustomFieldRequest;
 import dto.CustomFieldResponse;
 import dto.FieldType;
-import functionsApi.CustomFieldApi;
+import endpoints.functionsApi.CustomFieldApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CreateCustomFieldTest extends ApiBaseConfiguration {
+public class CreateCustomFieldTest extends ApiBase {
 
     private String createdCustomFieldId;
 

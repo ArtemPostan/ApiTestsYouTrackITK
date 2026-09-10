@@ -1,16 +1,17 @@
 package apiTests.negative;
 
-import based.ApiBaseConfiguration;
+import based.ApiBase;
 import dto.CreateCustomFieldRequest;
 import dto.FieldType;
-import functionsApi.CustomFieldApi;
+import endpoints.functionsApi.CustomFieldApi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import specifications.ApiSpecifications;
 
 import java.util.UUID;
 
-public class CreateCustomFieldNegativeTest extends ApiBaseConfiguration {
+public class CreateCustomFieldNegativeTest extends ApiSpecifications {
 
     @ParameterizedTest
     @ValueSource(strings = {

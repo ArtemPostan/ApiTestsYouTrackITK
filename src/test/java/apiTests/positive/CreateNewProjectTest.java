@@ -1,20 +1,19 @@
 package apiTests.positive;
 
-import based.ApiBaseConfiguration;
+import based.ApiBase;
 import dto.CreateProjectRequest;
 import dto.Leader;
 import dto.ProjectResponse;
-import functionsApi.ProjectApi;
+import endpoints.functionsApi.ProjectApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import userApi.UserApi;
+import endpoints.userApi.UserApi;
 
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Assertions;
 
-public class CreateNewProjectTest extends ApiBaseConfiguration {
+public class CreateNewProjectTest extends ApiBase {
     private String projectId;
 
     @Test
@@ -42,10 +41,10 @@ public class CreateNewProjectTest extends ApiBaseConfiguration {
                 .extract()
                 .as(ProjectResponse.class);
 
-        assertNotNull(projectResponse.getId());
-        assertEquals(name, projectResponse.getName());
-        assertEquals(shortName, projectResponse.getShortName());
-        assertEquals(leaderId, projectResponse.getLeader().getId());
+        Assertions.assertNotNull(projectResponse.getId());
+        Assertions.assertEquals(name, projectResponse.getName());
+        Assertions.assertEquals(shortName, projectResponse.getShortName());
+        Assertions.assertEquals(leaderId, projectResponse.getLeader().getId());
 
         projectId = projectResponse.getId();
     }

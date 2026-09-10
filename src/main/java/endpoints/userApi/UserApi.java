@@ -1,13 +1,13 @@
-package userApi;
+package endpoints.userApi;
 
-import based.ApiBaseConfiguration;
 import io.restassured.RestAssured;
+import specifications.ApiSpecifications;
 
 public class UserApi {
     public static String getCurrentUserId() {
         return RestAssured
                 .given()
-                .spec(ApiBaseConfiguration.getAuthSpec())
+                .spec(ApiSpecifications.getAuthSpec())
                 .queryParam("fields", "id")
                 .get("/api/users/me")
                 .then()

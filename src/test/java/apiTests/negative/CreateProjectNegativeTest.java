@@ -2,11 +2,11 @@ package apiTests.negative;
 
 import dto.CreateProjectRequest;
 import dto.Leader;
-import functionsApi.ProjectApi;
+import endpoints.functionsApi.ProjectApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import userApi.UserApi;
+import endpoints.userApi.UserApi;
 
 public class CreateProjectNegativeTest {
     private final String leaderId = UserApi.getCurrentUserId();
