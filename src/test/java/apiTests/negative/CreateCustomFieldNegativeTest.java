@@ -2,7 +2,7 @@ package apiTests.negative;
 
 import based.ApiBaseConfiguration;
 import functionsApi.CustomFieldApi;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -27,7 +27,8 @@ public class CreateCustomFieldNegativeTest extends ApiBaseConfiguration {
     @Test
     void shouldNotAllowDuplicateField() {
 
-        String fieldName = "ZoneOfResponsibility_" + UUID.randomUUID();
+        String fieldName =
+                "ZoneOfResponsibility_" + UUID.randomUUID();
 
         String fieldId = CustomFieldApi
                 .createCustomField(fieldName)
@@ -41,6 +42,7 @@ public class CreateCustomFieldNegativeTest extends ApiBaseConfiguration {
                     .createCustomField(fieldName)
                     .then()
                     .statusCode(400);
+
         } finally {
             CustomFieldApi
                     .deleteCustomField(fieldId)
@@ -48,5 +50,4 @@ public class CreateCustomFieldNegativeTest extends ApiBaseConfiguration {
                     .statusCode(200);
         }
     }
-
 }

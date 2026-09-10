@@ -1,27 +1,18 @@
 package functionsApi;
 
 import based.ApiBaseConfiguration;
+import dto.CreateProjectRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 public class ProjectApi {
 
-    public static Response createNewProject(String name, String shortName, String leaderId){
+    public static Response createNewProject(CreateProjectRequest request){
 
-        String requestBody = """
-                {
-                  "name": "%s",
-                  "shortName": "%s",
-                  "leader": {
-                    "id": "%s"
-                  }
-                }
-                """.formatted(name, shortName, leaderId);
-
-        return RestAssured
+      return RestAssured
                 .given()
                 .spec(ApiBaseConfiguration.getAuthSpec())
-                .body(requestBody)
+                .body(request)
                 .queryParam("fields", "id,name,shortName,leader(id,name,login)")
                 .post("/api/admin/projects");
     }

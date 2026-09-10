@@ -1,6 +1,9 @@
 package apiTests.positive;
 
 import based.ApiBaseConfiguration;
+import dto.CreateProjectRequest;
+import dto.Leader;
+import dto.ProjectResponse;
 import functionsApi.ProjectApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -8,9 +11,8 @@ import org.junit.jupiter.api.Test;
 import userApi.UserApi;
 
 import java.util.UUID;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CreateNewProjectTest extends ApiBaseConfiguration {
     private String projectId;
@@ -25,17 +27,27 @@ public class CreateNewProjectTest extends ApiBaseConfiguration {
                 .substring(0, 6)
                 .toUpperCase();
 
-        Response response = ProjectApi .createNewProject(name, shortName, leaderId);
+        CreateProjectRequest request =
+                new CreateProjectRequest(
+                        name,
+                        shortName,
+                        new Leader(leaderId)
+                );
 
-        response.then()
+        Response response = ProjectApi.createNewProject(request);
+
+        ProjectResponse projectResponse = response
+                .then()
                 .statusCode(200)
-                .body("id", notNullValue())
-                .body("name", equalTo(name))
-                .body("shortName", equalTo(shortName))
-                .body("leader.id", equalTo(leaderId));
+                .extract()
+                .as(ProjectResponse.class);
 
-        projectId = response
-                .path("id");
+        assertNotNull(projectResponse.getId());
+        assertEquals(name, projectResponse.getName());
+        assertEquals(shortName, projectResponse.getShortName());
+        assertEquals(leaderId, projectResponse.getLeader().getId());
+
+        projectId = projectResponse.getId();
     }
 
     @AfterEach

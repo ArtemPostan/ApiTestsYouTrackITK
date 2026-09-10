@@ -1,28 +1,40 @@
 package apiTests.positive;
 
 import based.ApiBaseConfiguration;
+import dto.CustomFieldResponse;
+import functionsApi.CustomFieldApi;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import functionsApi.CustomFieldApi;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CreateCustomFieldTest extends ApiBaseConfiguration {
+
     private String createdCustomFieldId;
 
     @Test
     void createCustomField() {
+
         String fieldName = "ZoneOfResponsibility_" + UUID.randomUUID();
-        createdCustomFieldId =
-                CustomFieldApi
-                        .createCustomField(fieldName)
+
+        Response response =
+                CustomFieldApi.createCustomField(fieldName);
+
+        CustomFieldResponse customField =
+                response
                         .then()
                         .statusCode(200)
-                        .body("name", equalTo(fieldName))
                         .extract()
-                        .path("id");
+                        .as(CustomFieldResponse.class);
+
+        createdCustomFieldId = customField.getId();
+
+        assertNotNull(customField.getId());
+        assertEquals(fieldName, customField.getName());
     }
 
     @AfterEach
@@ -35,5 +47,4 @@ public class CreateCustomFieldTest extends ApiBaseConfiguration {
                     .statusCode(200);
         }
     }
-
 }

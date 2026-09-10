@@ -1,5 +1,7 @@
 package apiTests.negative;
 
+import dto.CreateProjectRequest;
+import dto.Leader;
 import functionsApi.ProjectApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,11 +21,14 @@ public class CreateProjectNegativeTest {
 
         String shortName = "TP" + System.currentTimeMillis();
 
-        Response response = ProjectApi.createNewProject(
-                name,
-                shortName,
-                leaderId
-        );
+        CreateProjectRequest request =
+                new CreateProjectRequest(
+                        name,
+                        shortName,
+                        new Leader(leaderId)
+                );
+
+        Response response = ProjectApi.createNewProject(request);
 
         response.then()
                 .statusCode(400);
