@@ -1,6 +1,8 @@
 package apiTests.negative;
 
 import based.ApiBaseConfiguration;
+import dto.CreateCustomFieldRequest;
+import dto.FieldType;
 import functionsApi.CustomFieldApi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,8 +19,16 @@ public class CreateCustomFieldNegativeTest extends ApiBaseConfiguration {
     })
     void shouldRejectInvalidFieldName(String fieldName) {
 
+        CreateCustomFieldRequest request =
+                new CreateCustomFieldRequest(
+                        new FieldType("enum[1]"),
+                        fieldName,
+                        true,
+                        false
+                );
+
         CustomFieldApi
-                .createCustomField(fieldName)
+                .createCustomField(request)
                 .then()
                 .log().all()
                 .statusCode(400);
@@ -30,16 +40,23 @@ public class CreateCustomFieldNegativeTest extends ApiBaseConfiguration {
         String fieldName =
                 "ZoneOfResponsibility_" + UUID.randomUUID();
 
+        CreateCustomFieldRequest request =
+                new CreateCustomFieldRequest(
+                        new FieldType("enum[1]"),
+                        fieldName,
+                        true,
+                        false
+                );
+
         String fieldId = CustomFieldApi
-                .createCustomField(fieldName)
+                .createCustomField(request)
                 .then()
                 .statusCode(200)
                 .extract()
                 .path("id");
-
         try {
             CustomFieldApi
-                    .createCustomField(fieldName)
+                    .createCustomField(request)
                     .then()
                     .statusCode(400);
 
