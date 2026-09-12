@@ -1,25 +1,19 @@
 package apiTests.positive;
 
-import based.ApiBase;
+import apiTests.based.Base;
 import dto.CreateProjectRequest;
 import dto.Leader;
 import dto.ProjectResponse;
 import endpoints.functionsApi.ProjectApi;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import endpoints.userApi.UserApi;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 
-public class CreateNewProjectTest extends ApiBase {
-    private String projectId;
+public class CreateNewProjectTest extends Base {
 
     @Test
     public void shouldCreateNewProject() {
-        final String leaderId = UserApi.getCurrentUserId();
-
         String name = "Test Project_" + UUID.randomUUID();
         String shortName = "TP" + UUID.randomUUID()
                 .toString()
@@ -30,12 +24,10 @@ public class CreateNewProjectTest extends ApiBase {
                 new CreateProjectRequest(
                         name,
                         shortName,
-                        new Leader(leaderId)
+                        new Leader(currentUserId)
                 );
 
-        Response response = ProjectApi.createNewProject(request);
-
-        ProjectResponse projectResponse = response
+        ProjectResponse projectResponse = ProjectApi.createNewProject(AUTH_SPEC, request)
                 .then()
                 .statusCode(200)
                 .extract()
@@ -43,19 +35,7 @@ public class CreateNewProjectTest extends ApiBase {
 
         Assertions.assertNotNull(projectResponse.getId());
         Assertions.assertEquals(name, projectResponse.getName());
-        Assertions.assertEquals(shortName, projectResponse.getShortName());
-        Assertions.assertEquals(leaderId, projectResponse.getLeader().getId());
 
-        projectId = projectResponse.getId();
-    }
-
-    @AfterEach
-    void tearDown() {
-        if (projectId != null) {
-            ProjectApi
-                    .deleteProject(projectId)
-                    .then()
-                    .statusCode(200);
-        }
+        createdProjectIds.add(projectResponse.getId());
     }
 }

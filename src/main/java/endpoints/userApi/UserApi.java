@@ -1,13 +1,16 @@
 package endpoints.userApi;
 
 import io.restassured.RestAssured;
-import specifications.ApiSpecifications;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class UserApi {
-    public static String getCurrentUserId() {
+
+    public static String getCurrentUserId(RequestSpecification spec) {
+
         return RestAssured
                 .given()
-                .spec(ApiSpecifications.getAuthSpec())
+                .spec(spec)
                 .queryParam("fields", "id")
                 .get("/api/users/me")
                 .then()
@@ -15,4 +18,26 @@ public class UserApi {
                 .extract()
                 .path("id");
     }
+
+    public static Response getCurrentUser(
+            RequestSpecification spec,
+            String fields) {
+
+        return RestAssured
+                .given()
+                .spec(spec)
+                .queryParam("fields", fields)
+                .get("/api/users/me");
+    }
+
+    public static Response getCurrentUserWithoutAuth(
+            RequestSpecification spec) {
+
+        return RestAssured
+                .given()
+                .spec(spec)
+                .header("Accept", "application/json")
+                .get("/api/users/me");
+    }
 }
+

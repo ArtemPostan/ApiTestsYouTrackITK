@@ -1,17 +1,16 @@
 package apiTests.negative;
 
-import based.ApiBase;
+import apiTests.based.Base;
 import dto.CreateCustomFieldRequest;
 import dto.FieldType;
 import endpoints.functionsApi.CustomFieldApi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import specifications.ApiSpecifications;
 
 import java.util.UUID;
 
-public class CreateCustomFieldNegativeTest extends ApiSpecifications {
+public class CreateCustomFieldNegativeTest extends Base {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -29,9 +28,8 @@ public class CreateCustomFieldNegativeTest extends ApiSpecifications {
                 );
 
         CustomFieldApi
-                .createCustomField(request)
+                .createCustomField(AUTH_SPEC, request)
                 .then()
-                .log().all()
                 .statusCode(400);
     }
 
@@ -50,22 +48,17 @@ public class CreateCustomFieldNegativeTest extends ApiSpecifications {
                 );
 
         String fieldId = CustomFieldApi
-                .createCustomField(request)
+                .createCustomField(AUTH_SPEC, request)
                 .then()
                 .statusCode(200)
                 .extract()
                 .path("id");
-        try {
-            CustomFieldApi
-                    .createCustomField(request)
-                    .then()
-                    .statusCode(400);
 
-        } finally {
-            CustomFieldApi
-                    .deleteCustomField(fieldId)
-                    .then()
-                    .statusCode(200);
-        }
+        createdCustomFieldIds.add(fieldId);
+
+        CustomFieldApi
+                .createCustomField(AUTH_SPEC, request)
+                .then()
+                .statusCode(400);
     }
 }

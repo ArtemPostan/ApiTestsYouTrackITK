@@ -13,4 +13,8 @@ public class ApiSpecifications {
                 .setContentType("application/json")
                 .build();
     }
+
+    public static RequestSpecification getNoAuthSpec() {
+        return new RequestSpecBuilder() .setBaseUri(Config.getBaseUrl()) .setContentType("application/json") .build();
+    }
 }

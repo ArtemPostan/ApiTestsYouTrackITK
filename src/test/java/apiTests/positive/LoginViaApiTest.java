@@ -1,34 +1,33 @@
 package apiTests.positive;
 
-import based.ApiBase;
-import io.restassured.RestAssured;
-import org.hamcrest.Matchers;
+import apiTests.based.Base;
+import endpoints.userApi.UserApi;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import specifications.ApiSpecifications;
 
-public class LoginViaApiTest extends ApiBase {
+import static org.hamcrest.Matchers.equalTo;
+
+public class LoginViaApiTest extends Base {
+
     @Test
     @DisplayName("Проверка доступа с передачей поля login")
-    public void testGetProfile() {
-        RestAssured.given()
-                .spec(ApiSpecifications.getAuthSpec())
-                .queryParam("fields", "id,login")
-                .when()
-                .get("/api/users/me")
+    void testGetProfile() {
+
+        UserApi
+                .getCurrentUser(AUTH_SPEC, "id,login")
                 .then()
                 .statusCode(200)
-                .body("login", Matchers.equalTo("admin"));
+                .body("login", equalTo("admin"));
     }
 
     @Test
     @DisplayName("Отказ в доступе (401) без передачи токена")
-    public void shouldDenyAccessWithoutToken() {
-        RestAssured.given()
-                .header("Accept", "application/json")
-                .when()
-                .get("/api/users/me")
+    void shouldDenyAccessWithoutToken() {
+
+        UserApi
+                .getCurrentUserWithoutAuth(NO_AUTH_SPEC)
                 .then()
                 .statusCode(401);
     }
 }
+

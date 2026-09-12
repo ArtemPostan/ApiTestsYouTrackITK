@@ -1,15 +1,14 @@
 package apiTests.negative;
 
+import apiTests.based.Base;
 import dto.CreateProjectRequest;
 import dto.Leader;
 import endpoints.functionsApi.ProjectApi;
 import io.restassured.response.Response;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import endpoints.userApi.UserApi;
 
-public class CreateProjectNegativeTest {
-    private final String leaderId = UserApi.getCurrentUserId();
+public class CreateProjectNegativeTest extends Base {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -25,10 +24,10 @@ public class CreateProjectNegativeTest {
                 new CreateProjectRequest(
                         name,
                         shortName,
-                        new Leader(leaderId)
+                        new Leader(currentUserId)
                 );
 
-        Response response = ProjectApi.createNewProject(request);
+        Response response = ProjectApi.createNewProject(AUTH_SPEC, request);
 
         response.then()
                 .statusCode(400);
