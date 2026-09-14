@@ -1,16 +1,16 @@
 package apiTests.positive;
 
-import apiTests.based.Base;
+import apiTests.based.BaseTest;
 import dto.CreateProjectRequest;
 import dto.Leader;
 import dto.ProjectResponse;
 import endpoints.functionsApi.ProjectApi;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 
-public class CreateNewProjectTest extends Base {
+import java.util.UUID;
+
+public class CreateNewProjectTest extends BaseTest {
 
     @Test
     public void shouldCreateNewProject() {
@@ -27,15 +27,14 @@ public class CreateNewProjectTest extends Base {
                         new Leader(currentUserId)
                 );
 
-        ProjectResponse projectResponse = ProjectApi.createNewProject(AUTH_SPEC, request)
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(ProjectResponse.class);
+        ProjectResponse createdProject = ProjectApi.createNewProject(request);
+        String projectId = createdProject.getId();
 
-        Assertions.assertNotNull(projectResponse.getId());
-        Assertions.assertEquals(name, projectResponse.getName());
+        Assertions.assertNotNull(projectId);
+        createdProjectIds.add(projectId);
 
-        createdProjectIds.add(projectResponse.getId());
+        ProjectResponse fetchedProject = ProjectApi.getProjectById(projectId);
+
+        Assertions.assertEquals(name, fetchedProject.getName());
     }
 }

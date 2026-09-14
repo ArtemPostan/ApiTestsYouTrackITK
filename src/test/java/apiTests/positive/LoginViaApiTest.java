@@ -1,33 +1,27 @@
 package apiTests.positive;
 
-import apiTests.based.Base;
+import apiTests.based.BaseTest;
 import endpoints.userApi.UserApi;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LoginViaApiTest extends Base {
+public class LoginViaApiTest extends BaseTest {
 
     @Test
     @DisplayName("Проверка доступа с передачей поля login")
     void testGetProfile() {
+        String login = UserApi.getUserLogin("id,login");
 
-        UserApi
-                .getCurrentUser(AUTH_SPEC, "id,login")
-                .then()
-                .statusCode(200)
-                .body("login", equalTo("admin"));
+        assertEquals("admin", login);
     }
 
     @Test
     @DisplayName("Отказ в доступе (401) без передачи токена")
     void shouldDenyAccessWithoutToken() {
+        int statusCode = UserApi.getStatusCodeWithoutAuth();
 
-        UserApi
-                .getCurrentUserWithoutAuth(NO_AUTH_SPEC)
-                .then()
-                .statusCode(401);
+        assertEquals(401, statusCode);
     }
 }
-

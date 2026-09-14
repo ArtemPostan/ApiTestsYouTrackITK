@@ -1,14 +1,15 @@
 package apiTests.negative;
 
-import apiTests.based.Base;
+import apiTests.based.BaseTest;
 import dto.CreateProjectRequest;
 import dto.Leader;
 import endpoints.functionsApi.ProjectApi;
-import io.restassured.response.Response;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class CreateProjectNegativeTest extends Base {
+import static specifications.ApiSpecifications.response400;
+
+public class CreateProjectNegativeTest extends BaseTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -27,9 +28,6 @@ public class CreateProjectNegativeTest extends Base {
                         new Leader(currentUserId)
                 );
 
-        Response response = ProjectApi.createNewProject(AUTH_SPEC, request);
-
-        response.then()
-                .statusCode(400);
+        ProjectApi.createNewProject(request, response400());
     }
 }

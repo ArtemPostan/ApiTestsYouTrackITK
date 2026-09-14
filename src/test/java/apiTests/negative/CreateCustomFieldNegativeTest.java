@@ -1,7 +1,8 @@
 package apiTests.negative;
 
-import apiTests.based.Base;
+import apiTests.based.BaseTest;
 import dto.CreateCustomFieldRequest;
+import dto.CustomFieldResponse;
 import dto.FieldType;
 import endpoints.functionsApi.CustomFieldApi;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.UUID;
 
-public class CreateCustomFieldNegativeTest extends Base {
+import static specifications.ApiSpecifications.response400;
+
+public class CreateCustomFieldNegativeTest extends BaseTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -18,7 +21,6 @@ public class CreateCustomFieldNegativeTest extends Base {
             "CustomField:Name"
     })
     void shouldRejectInvalidFieldName(String fieldName) {
-
         CreateCustomFieldRequest request =
                 new CreateCustomFieldRequest(
                         new FieldType("enum[1]"),
@@ -27,15 +29,11 @@ public class CreateCustomFieldNegativeTest extends Base {
                         false
                 );
 
-        CustomFieldApi
-                .createCustomField(AUTH_SPEC, request)
-                .then()
-                .statusCode(400);
+        CustomFieldApi.createCustomField(request, response400());
     }
 
     @Test
     void shouldNotAllowDuplicateField() {
-
         String fieldName =
                 "ZoneOfResponsibility_" + UUID.randomUUID();
 
@@ -47,18 +45,11 @@ public class CreateCustomFieldNegativeTest extends Base {
                         false
                 );
 
-        String fieldId = CustomFieldApi
-                .createCustomField(AUTH_SPEC, request)
-                .then()
-                .statusCode(200)
-                .extract()
-                .path("id");
+        // Первое создание (успешно, возвращает DTO)
+        CustomFieldResponse customField = CustomFieldApi.createCustomField(request);
+        createdCustomFieldIds.add(customField.getId());
 
-        createdCustomFieldIds.add(fieldId);
-
-        CustomFieldApi
-                .createCustomField(AUTH_SPEC, request)
-                .then()
-                .statusCode(400);
+        // Второе создание (ожидаем ошибку 400)
+        CustomFieldApi.createCustomField(request, response400());
     }
 }
